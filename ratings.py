@@ -46,5 +46,35 @@ class User(BaseModel):
 def get_rating():
     url = "https://bureau.ru/classroom/events/1637/reports/race.json"
     response = requests.get(url)
-    ratings = parse_obj_as(List[User], response.json())
-    print(ratings[0].uid)
+    users = parse_obj_as(List[User], response.json())
+    disciplines = ("products", "fff", "analytics", "clients", "text", "ui", "typography")
+
+    results = []
+    for _ in range(17):
+        results.append({
+            "products": [],
+            "fff": [],
+            "analytics": [],
+            "clients": [],
+            "text": [],
+            "ui": [],
+            "typography": [],
+            "bonus": [],
+            "prep": []
+        })
+
+    for user in users:
+        for week_number, week_info in enumerate(user.weeks):
+            for discipline in week_info.details:
+                results[week_number][discipline.course].append((discipline.score, user.name))
+
+    for week_number, week in enumerate(results, 1):
+        for d in week.keys():
+            if len(week[d]) != 0:
+                week[d].sort()
+                print(f"{d}-{week_number}")
+                for u in week[d]:
+                    print(u)
+
+
+get_rating()
