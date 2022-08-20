@@ -1,3 +1,4 @@
+from collections import defaultdict
 from typing import Any, List, Optional
 
 import requests
@@ -47,21 +48,10 @@ def get_rating():
     url = "https://bureau.ru/classroom/events/1637/reports/race.json"
     response = requests.get(url)
     users = parse_obj_as(List[User], response.json())
-    disciplines = ("products", "fff", "analytics", "clients", "text", "ui", "typography")
-
+    
     results = []
     for _ in range(17):
-        results.append({
-            "products": [],
-            "fff": [],
-            "analytics": [],
-            "clients": [],
-            "text": [],
-            "ui": [],
-            "typography": [],
-            "bonus": [],
-            "prep": []
-        })
+        results.append(defaultdict(list))
 
     for user in users:
         for week_number, week_info in enumerate(user.weeks):
