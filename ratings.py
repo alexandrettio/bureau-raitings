@@ -44,8 +44,7 @@ class User(BaseModel):
     diploma_managers: Any
 
 
-def get_rating():
-    url = "https://bureau.ru/classroom/events/1637/reports/race.json"
+def get_rating(url="https://bureau.ru/classroom/events/1637/reports/race.json"):
     response = requests.get(url)
     users = parse_obj_as(List[User], response.json())
     
